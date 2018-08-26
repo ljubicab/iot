@@ -36,6 +36,11 @@ def arduinoFunction():
 			print "aaaa"
 			num = times.count()
 			print num
+			full = { 
+                                "food":"full"
+                                }
+                        distance.update_one({'id':"1"},{'$set':full})
+
 		
 def alarmFunction():
 	while True:
@@ -48,11 +53,10 @@ def alarmFunction():
 def sensorFunction():
 	while True:
 		if ser.readline().strip()=="e":
-			distance.delete_many({"food":"empty"})
-			record = {
+			empty = {
 				"food":"empty"
 				}
-			distance.insert_one(record)
+			distance.update_one({'id':"1"},{'$set':empty})
 			time.sleep(10)
 
 arduino_thread=Thread(target=arduinoFunction)
