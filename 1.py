@@ -20,7 +20,6 @@ def on_connect(clinet,userdata,flags,rc):
         print "on connect"
 
 def on_message(client,userdata,msg):
-        print(msg.topic+" "+str(msg.payload))
         if msg.payload =="release the food":
                 ser.write("0")
 
@@ -33,14 +32,8 @@ def arduinoFunction():
              	        	"confirmed":"true"
                	       		}
 			times.insert_one(record)
-			print "aaaa"
 			num = times.count()
 			print num
-			full = { 
-                                "food":"full"
-                                }
-                        distance.update_one({'id':"1"},{'$set':full})
-
 		
 def alarmFunction():
 	while True:
@@ -50,6 +43,7 @@ def alarmFunction():
 			if alarms.find_one({"time":timeNow}) != None:
 				ser.write("0")
 			time.sleep(60)
+
 def sensorFunction():
 	while True:
 		if ser.readline().strip()=="e":
@@ -57,7 +51,12 @@ def sensorFunction():
 				"food":"empty"
 				}
 			distance.update_one({'id':"1"},{'$set':empty})
-			time.sleep(10)
+		elif ser.readline().strip()=="f":
+			full = {
+                                "food":"full"
+                                }
+                        distance.update_one({'id':"1"},{'$set':full})
+
 
 arduino_thread=Thread(target=arduinoFunction)
 arduino_thread.start()
