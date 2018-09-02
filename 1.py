@@ -5,16 +5,18 @@ import datetime
 import pymongo
 from pymongo import MongoClient
 from threading import Thread
-
+#https://stackoverflow.com/questions/39000755/unable-to-access-hivemq-broker-from-raspberry-pi
 ser=serial.Serial(port='/dev/ttyACM1', baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE,
 bytesize=serial.EIGHTBITS,timeout=1)
 print ser.name
+#https://www.youtube.com/watch?v=8GRUwftKAps
 mongodb_uri="mongodb://Ema:ef123456@ds231941.mlab.com:31941/mewpurr"
 client = MongoClient(mongodb_uri, connectTimeoutMS=30000)
 db=client.get_database("mewpurr")
 times=db.timestamps
 alarms=db.alarms
 distance=db.sensor
+
 def on_connect(clinet,userdata,flags,rc):
         client.subscribe("mewpurr/food")
         print "on connect"
@@ -53,11 +55,11 @@ def sensorFunction():
 			distance.update_one({'id':"1"},{'$set':empty})
 		elif ser.readline().strip()=="f":
 			full = {
-                                "food":"full"
-                                }
-                        distance.update_one({'id':"1"},{'$set':full})
+                    "food":"full"
+                    }
+            distance.update_one({'id':"1"},{'$set':full})
 
-
+#https://docs.python.org/3/library/threading.html
 arduino_thread=Thread(target=arduinoFunction)
 arduino_thread.start()
 alarm_thread=Thread(target=alarmFunction)
