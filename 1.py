@@ -28,11 +28,11 @@ def on_message(client,userdata,msg):
 def arduinoFunction():
 	while True:
 		if ser.readline().strip()=="m":
-               		vrijeme = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%s')
-               		record = {
-       	               		"date":vrijeme,
-             	        	"confirmed":"true"
-               	       		}
+            vrijeme = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%s')
+            record = {
+       	        "date":vrijeme,
+             	"confirmed":"true"
+               	}
 			times.insert_one(record)
 			num = times.count()
 			print num
@@ -55,8 +55,8 @@ def sensorFunction():
 			distance.update_one({'id':"1"},{'$set':empty})
 		elif ser.readline().strip()=="f":
 			full = {
-                    "food":"full"
-                    }
+                "food":"full"
+                }
             distance.update_one({'id':"1"},{'$set':full})
 
 #https://docs.python.org/3/library/threading.html
